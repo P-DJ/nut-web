@@ -1,6 +1,7 @@
 export function Hero() {
   return (
     <header className="hero">
+      <div className="hero-image" aria-hidden />
       <div className="hero-glow" aria-hidden />
       <div className="hero-grain" aria-hidden />
 
@@ -12,7 +13,7 @@ export function Hero() {
         <h1 className="hero-brand">坚果</h1>
 
         <p className="hero-lead animate-rise" style={{ animationDelay: '0.35s' }}>
-          一只黑色母柴犬的成长与生活点滴
+          一只黑色柴犬的成长与日常点滴
         </p>
       </div>
 
