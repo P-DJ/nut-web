@@ -1,4 +1,4 @@
-import type { Moment } from './types'
+import type { Moment } from '../types'
 
 /** Demo 媒体：使用公开可访问的黑柴 / 柴犬参考图，后续可替换为你的 COS 地址 */
 export const demoMoments: Moment[] = [
