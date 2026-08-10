@@ -1,26 +1,15 @@
+import { homeContent } from '../content/home/content'
+
 export function Hero() {
   return (
-    <header className="hero">
-      <div className="hero-image" aria-hidden />
-      <div className="hero-glow" aria-hidden />
-      <div className="hero-grain" aria-hidden />
-
-      <div className="hero-inner animate-rise">
-        <p className="hero-kicker animate-fade" style={{ animationDelay: '0.25s' }}>
-          Black Shiba · 2 yrs
-        </p>
-
-        <h1 className="hero-brand">坚果</h1>
-
-        <p className="hero-lead animate-rise" style={{ animationDelay: '0.35s' }}>
-          一只黑色柴犬的成长与日常点滴
-        </p>
+    <main className="hero">
+      <img className="hero-image" src={homeContent.heroImage} alt={homeContent.heroAlt} />
+      <div className="hero-shade" aria-hidden />
+      <div className="hero-copy">
+        <p>{homeContent.eyebrow}</p>
+        <h1>{homeContent.title}</h1>
+        <span>{homeContent.subtitle}</span>
       </div>
-
-      <div className="hero-scroll animate-fade" style={{ animationDelay: '0.9s' }}>
-        <span>下滑看看她</span>
-        <span className="hero-scroll-line" aria-hidden />
-      </div>
-    </header>
+    </main>
   )
 }

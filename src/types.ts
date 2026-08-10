@@ -1,3 +1,5 @@
+export type PageId = 'home' | 'timeline' | 'health' | 'about'
+
 export type MomentType = 'photo' | 'video' | 'text'
 
 export interface Moment {
@@ -5,22 +7,21 @@ export interface Moment {
   type: MomentType
   title: string
   body?: string
-  mediaUrl?: string
-  thumbnailUrl?: string
-  createdAt: string
-  tags?: string[]
+  media?: string
+  /** Calendar date in YYYY-MM-DD format. */
+  date: string
+  /** Optional 24-hour time in HH:mm format. */
+  time?: string
+  tags: string[]
+  duration?: string
 }
 
-export interface UploadPayload {
-  type: MomentType
-  title: string
-  body?: string
-  file?: File | null
-  tags?: string[]
-}
+export type HealthCategory = 'bath' | 'deworm' | 'cycle'
 
-export interface UploadProgress {
-  percent: number
-  status: 'idle' | 'uploading' | 'done' | 'error'
-  message?: string
+export interface HealthEntry {
+  id: string
+  category: HealthCategory
+  /** Record date in YYYY-MM-DD format. */
+  date: string
+  note?: string
 }
