@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: ${SUPABASE_DB_URL}
+    username: ${SUPABASE_DB_USER:postgres}
+    password: ${SUPABASE_DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${SUPABASE_ISSUER_URI}
+
+server:
+  port: ${PORT:8080}
+
+app:
+  cors:
+    allowed-origin: ${FRONTEND_ORIGIN:http://localhost:5173}
+  auth:
+    enabled: ${AUTH_ENABLED:true}
+    public-owner-id: ${PUBLIC_OWNER_ID:00000000-0000-0000-0000-000000000001}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
