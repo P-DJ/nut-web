@@ -28,3 +28,7 @@ npm run dev
 - 关于坚果：`src/content/about/content.ts`，素材：`public/content/about/`
 
 跨模块复用的通用素材放在 `public/content/shared/`。内容文件内提供了录入示例；日期使用 `YYYY-MM-DD`，时间可选，使用 `HH:mm`。
+
+## 健康记录 API
+
+Java 后端位于 `backend/`，使用 Spring Boot、Supabase PostgreSQL 和 Supabase Auth。配置与运行说明见 `backend/README.md`。前端接入前，需要先创建 Supabase 项目并配置认证回跳地址。
