@@ -38,7 +38,7 @@ async function request<T>(session: Session | null, path: string, init?: RequestI
 
   if (!response.ok) {
     const error = await response.json().catch(() => null) as { message?: string } | null
-    throw new Error(error?.message ?? '健康档案暂时无法同步，请稍后重试。')
+    throw new Error(error?.message ?? `健康档案请求失败（HTTP ${response.status}）。`)
   }
 
   return response.status === 204 ? undefined as T : response.json() as Promise<T>
@@ -59,6 +59,14 @@ export async function createHealthEntry(session: Session | null, entry: Omit<Hea
     body: JSON.stringify({ ...entry, category: categoryToApi[entry.category] }),
   })
   return toEntry(created)
+}
+
+export async function updateHealthEntry(session: Session | null, id: string, entry: Omit<HealthEntry, 'id'>) {
+  const updated = await request<ApiHealthEntry>(session, `/api/health/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({ ...entry, category: categoryToApi[entry.category] }),
+  })
+  return toEntry(updated)
 }
 
 export function deleteHealthEntry(session: Session | null, id: string) {

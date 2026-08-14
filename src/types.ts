@@ -8,6 +8,7 @@ export interface Moment {
   title: string
   body?: string
   media?: string
+  mediaPath?: string
   /** Calendar date in YYYY-MM-DD format. */
   date: string
   /** Optional 24-hour time in HH:mm format. */

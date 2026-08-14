@@ -12,7 +12,9 @@ export function MomentCard({ moment, onOpen }: MomentCardProps) {
     <article className={`moment-card moment-${moment.type}`}>
       <time dateTime={moment.date}>{formatMomentDate(moment.date)}</time>
       <button type="button" className="moment-open" onClick={() => onOpen(moment)}>
-        {moment.media ? <img src={moment.media} alt={moment.title} /> : <div className="text-moment-mark">日记</div>}
+        {moment.type === 'video' && moment.media ? <video src={moment.media} muted playsInline preload="metadata" aria-label={moment.title} /> : null}
+        {moment.type === 'photo' && moment.media ? <img src={moment.media} alt={moment.title} /> : null}
+        {moment.type === 'text' || !moment.media ? <div className="text-moment-mark">日记</div> : null}
         {moment.type === 'video' ? <span className="play-mark"><IconPlay size={18} /></span> : null}
       </button>
       <div className="moment-copy">

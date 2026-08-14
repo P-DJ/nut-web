@@ -171,16 +171,13 @@ server:
 app:
   cors:
     allowed-origin: ${FRONTEND_ORIGIN:http://localhost:5173}
-  auth:
-    enabled: ${AUTH_ENABLED:true}
-    public-owner-id: ${PUBLIC_OWNER_ID:00000000-0000-0000-0000-000000000001}
 ```
 
 `app.*` 是本项目自定义配置：
 
-- `allowed-origin`：允许哪个浏览器站点调用 API。当前前端是 `http://localhost:5174`，所以本地 `.env` 也应设置为这个地址。
-- `enabled`：`true` 时必须带 Supabase JWT；`false` 时是临时公开档案。
-- `public-owner-id`：公开模式也需要一个固定 `owner_id`，以复用同一张表的数据隔离结构。
+- `allowed-origin`：允许哪个浏览器站点调用 API。当前前端是 `http://localhost:5173`，所以本地 `.env` 也应设置为这个地址。
+
+除公开的 `GET /api/timeline` 外，所有 API 都必须携带 Supabase JWT；没有可关闭鉴权的运行模式。
 
 ```yaml
 management:
@@ -387,9 +384,7 @@ order by date desc, created_at desc;
 构造函数参数由 Spring 注入：
 
 ```java
-HealthEntryRepository repository,
-@Value("${app.auth.enabled}") boolean authenticationEnabled,
-@Value("${app.auth.public-owner-id}") UUID publicOwnerId
+HealthEntryRepository repository
 ```
 
 - `repository` 是 Spring 自动创建的 Repository Bean。
@@ -442,37 +437,20 @@ public HealthEntryResponse create(@AuthenticationPrincipal Jwt jwt, @Valid @Requ
 .orElseThrow(() -> new HealthEntryNotFoundException(id));
 ```
 
-即使猜到别人的记录 ID，也只能删掉自己的记录；查不到或不属于自己统一返回 404，避免泄露记录是否存在。公开模式下则比较固定的公开 owner ID。
+即使猜到别人的记录 ID，也只能删掉自己的记录；查不到或不属于自己统一返回 404，避免泄露记录是否存在。
 
 `repository.delete(entry)` 执行删除；`204 No Content` 表示成功但响应体为空。
 
-### 10.4 ownerId 方法与当前公开模式
+### 10.4 ownerId 方法与登录身份
 
 ```java
 private UUID ownerId(Jwt jwt) {
-    if (jwt != null) return UUID.fromString(jwt.getSubject());
-    if (!authenticationEnabled) return publicOwnerId;
-    throw new IllegalStateException("未获取到登录身份。");
+    if (jwt == null) throw new IllegalStateException("未获取到登录身份。");
+    return UUID.fromString(jwt.getSubject());
 }
 ```
 
-这里把两种运行模式统一成一个 owner ID：
-
-- 鉴权模式：JWT 的 `sub` 是 Supabase 用户 UUID。
-- 公开模式：使用配置中的固定 UUID。
-- 鉴权已启用但没有 JWT：抛出异常；正常情况下会在 Security Filter 中提前被 401 拦截。
-
-公开模式是为了本地学习和当前临时使用，**不能直接暴露到公网**。恢复时：
-
-```env
-# backend/.env
-AUTH_ENABLED=true
-
-# 前端 .env.local
-VITE_HEALTH_PUBLIC_MODE=false
-```
-
-然后重启后端与 Vite 前端。
+JWT 的 `sub` 是 Supabase 用户 UUID。缺少 JWT 时由 Security Filter 提前返回 `401`；这里保留防御性检查，避免控制器被绕过时继续访问数据库。
 
 ## 11. SecurityConfig：请求到 Controller 前先经过它
 
@@ -593,7 +571,7 @@ curl --request DELETE http://localhost:8080/api/health/<id>
 
 1. 在 `HealthEntryRequest.note` 上把 `max` 临时改小，发送过长备注，观察结果。
 2. 新建 `V2__add_source.sql`，给表加一个 `source` 列，再在 Entity/Request/Response 中完成映射。
-3. 恢复 `AUTH_ENABLED=true`，观察无 JWT 请求变为 `401`。
+3. 不带 JWT 请求健康档案写接口，观察返回 `401`。
 4. 用 Supabase 登录得到 JWT，再观察 Controller 的 `jwt.getSubject()`。
 
 ## 15. 后续可改进点

@@ -22,8 +22,10 @@ app:
   cors:
     allowed-origin: ${FRONTEND_ORIGIN:http://localhost:5173}
   auth:
-    enabled: ${AUTH_ENABLED:true}
-    public-owner-id: ${PUBLIC_OWNER_ID:00000000-0000-0000-0000-000000000001}
+    admin-user-id: ${SUPABASE_ADMIN_USER_ID:}
+  supabase:
+    url: ${SUPABASE_URL:}
+    service-role-key: ${SUPABASE_SERVICE_ROLE_KEY:}
 
 management:
   endpoints:
