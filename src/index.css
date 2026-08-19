@@ -3,8 +3,9 @@
 :root { font-family: Inter, 'PingFang SC', 'Helvetica Neue', sans-serif; color: #f0f3e9; background: #030806; font-synthesis: none; text-rendering: optimizeLegibility; }
 * { box-sizing: border-box; }
 html, body, #root { min-height: 100%; }
-body { margin: 0; background: #030806; scrollbar-width: none; }
+body { margin: 0; background: #101512; scrollbar-width: none; }
 body::-webkit-scrollbar { display: none; }
 button, input { font: inherit; }
 button { border: 0; cursor: pointer; }
 img, video { display: block; max-width: 100%; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
