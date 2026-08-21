@@ -29,3 +29,15 @@ npm run dev
 ## 健康记录 API
 
 Java 后端位于 `backend/`，使用 Spring Boot、Supabase PostgreSQL、Auth 和私有 Storage。配置与运行说明见 `backend/README.md`。
+
+## 移动端（Expo）
+
+移动端位于 apps/mobile/，与当前 Vite Web 端并行维护，Web 入口和发布方式不变。
+
+    cd apps/mobile
+    cp .env.example .env
+    npm run start
+
+在 .env 中填入与 Web 端一致的 Supabase URL、Publishable Key，以及健康记录后端地址。真机访问本地 Spring Boot 服务时，EXPO_PUBLIC_HEALTH_API_URL 必须使用电脑的局域网 IP，例如 http://192.168.1.20:8080，不能使用 localhost。
+
+开发初期可在手机安装 Expo Go 后扫描终端二维码；接入自定义原生能力或准备发布时，使用 Expo development build。移动端的类型与日期格式化逻辑在 packages/shared/，Web 端通过转发层继续使用这些定义。
